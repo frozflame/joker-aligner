@@ -11,7 +11,7 @@ from setuptools import setup, find_packages, Extension
 # DO NOT import your package from your setup.py
 
 
-def file_read(filename):
+def readfile(filename):
     with open(filename) as f:
         return f.read()
 
@@ -45,7 +45,7 @@ alignlib = Extension(
 config = {
     'name': "joker-" + package_name,
     'version': version_find(),
-    'description': '' + description,
+    'description': description,
     'keywords': '',
     'url': "https://github.com/frozflame/joker-aligner",
     'author': 'frozflame',
@@ -55,7 +55,7 @@ config = {
     'namespace_packages': ["joker"],
     'zip_safe': False,
     'ext_modules': [alignlib],
-    'install_requires': file_read("requirements.txt"),
+    'install_requires': readfile("requirements.txt"),
     'classifiers': [
         'Programming Language :: Python',
         'Programming Language :: Python :: 2',
