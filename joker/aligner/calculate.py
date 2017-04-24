@@ -44,7 +44,7 @@ class Aligner(object):
             self.index_type,   # jsize
             self.score_type,   # rho
             self.score_type,   # sigma
-            self.short_type,  # local_
+            self.short_type,   # local_
         ]
 
         self.backtrack = self.lib.backtrack
@@ -57,7 +57,7 @@ class Aligner(object):
             self.index_type,   # jstart
             ndpointer(self.index_type, flags=arrflages),    # iarr index
             ndpointer(self.index_type, flags=arrflages),    # jarr index
-            self.short_type,  # global_
+            self.short_type,   # global_
         ]
 
     def calculate(self, istring, jstring, scheme=1, backtrack=False):
@@ -153,7 +153,17 @@ class Aligner(object):
         if backtrack:
             return matrx[-1, -1, 2], iarr.tostring()[::-1], jarr.tostring()[::-1]
         else:
-            return matrx[-1, -1, 2], iarr.tostring()[::-1], jarr.tostring()[::-1]
+            return matrx[-1, -1, 2], None, None
+
+    @staticmethod
+    def debug_backtrack(matrx):
+        symbols = ord('-'), ord('|'), ord('\\'), ord('3')
+        symbols = np.array(symbols, dtype='uint8')
+        idx = matrx[:, :, 3]
+        darr = symbols[idx]
+        for row in darr:
+            line = row.tostring().decode('ascii')
+            yield line
 
     @staticmethod
     def make_match_string(istring, jstring, indelchar='-'):

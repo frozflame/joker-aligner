@@ -19,10 +19,6 @@ def locate_submat(name):
     return p
 
 
-def remove_whitespaces(s):
-    return ''.join(s.split())
-
-
 def load_submat(path):
     if '/' not in path:
         path = locate_submat(path)
@@ -36,7 +32,8 @@ def load_submat(path):
         for line in infile:
             line = line.strip()
             if line and not line.startswith('#'):
-                jstring = remove_whitespaces(line)
+                # remove whitespaces
+                jstring = ''.join(line.split())
                 jsize = len(jstring) + 1
                 break
 
