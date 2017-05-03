@@ -53,15 +53,3 @@ def load_submat(path):
     istring = ''.join(ichars)
     submatr = np.array(scores, dtype=int)
     return istring, jstring, submatr
-
-
-def test():
-    p = '/Users/Hailong/Cloud/Imbark/code/jokerseries/joker-aligner/joker/aligner/matrix/blosum30'
-    i, j, s = load_submat(p)
-    print(i)
-    print(j)
-    print(s)
-
-
-if __name__ == '__main__':
-    test()
