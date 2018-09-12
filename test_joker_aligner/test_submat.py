@@ -4,8 +4,8 @@
 from __future__ import division, print_function
 
 # from joker.aligner import visualize
-# from joker.aligner.calculate import Aligner
-from joker.aligner.submatrix import load_submat
+# from joker.aligner.compute import Aligner
+from joker.aligner.utility import load_submat
 
 
 def test_load_submat():
@@ -15,5 +15,13 @@ def test_load_submat():
     print(s)
 
 
+def test_load_alnum1():
+    i, j, s = load_submat('EN01')
+    print(i)
+    print(j)
+    print(s)
+
+
 if __name__ == '__main__':
     test_load_submat()
+    test_load_alnum1()

@@ -6,7 +6,7 @@ import itertools
 import sys
 import time
 
-from joker.aligner import align_simple
+from joker.aligner import get_aligner
 
 try:
     from joker.textmanip.iterative import chunkwize_parallel
@@ -15,12 +15,11 @@ except ImportError:
         # args are strings or lists
         chunksize = int(chunksize)
         for i in itertools.count(0):
-            r = [s[i*chunksize:(i+1)*chunksize] for s in args]
+            r = [s[i * chunksize:(i + 1) * chunksize] for s in args]
             if any(r):
                 yield r
             else:
                 raise StopIteration
-
 
 # sp|P37744|RMLA1_ECOLI Glucose-1-phosphate thymidylyltransferase 1
 # OS=Escherichia coli (strain K12) GN=rfbA PE=1 SV=2
@@ -45,26 +44,29 @@ j_sequence = """
     QNIQNLHIACLEEIAWRNGWLSDEKLEELARPMAKNQYGQYLLRLLKK
     """
 
-
 i_sequence = ''.join(i_sequence.split())
 j_sequence = ''.join(j_sequence.split())
 
 
-def demo(iseq, jseq, quiet=False):
-    score, iseq, jseq, mseq = align_simple(iseq, jseq)
-    for items in chunkwize_parallel(60, iseq, mseq, jseq):
+def demostrate(iseq, jseq):
+    aligner = get_aligner()
+    alignment = aligner(iseq, jseq, backtrack=True)
+    match_strings = (
+        alignment.get_istring(),
+        alignment.get_mstring(),
+        alignment.get_jstring(),
+    )
+    for items in chunkwize_parallel(60, *match_strings):
         bunch = '\n'.join(items)
-        if not quiet:
-            print(bunch, end='\n\n', file=sys.stderr)
-    if not quiet:
-        print('score:', score)
-    return score, iseq, jseq, mseq
+        print(bunch, end='\n\n', file=sys.stderr)
+    print('score:', alignment.score)
 
 
 def benchmark(loop=100):
     tm = time.time()
+    aligner = get_aligner()
     for i in range(loop):
-        _ = align_simple(i_sequence, j_sequence)
+        _ = aligner(i_sequence, j_sequence)
     tm = time.time() - tm
     tm_perloop = 1000 * tm / loop
     msg = '{} loops, avg {:.2f} millisec per loop'.format(loop, tm_perloop)
@@ -73,11 +75,9 @@ def benchmark(loop=100):
 
 def test_align():
     # test_align()
-    demo(i_sequence, j_sequence)
+    demostrate(i_sequence, j_sequence)
     benchmark()
 
 
 if __name__ == '__main__':
     test_align()
-
-

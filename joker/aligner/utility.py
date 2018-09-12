@@ -5,18 +5,23 @@ from __future__ import unicode_literals, print_function
 
 import os
 
-import numpy as np
-
 import joker.aligner
+import numpy as np
 
 
 def locate_submat(name):
     d = os.path.split(joker.aligner.__file__)[0]
-    p = os.path.join(d, 'matrix', name)
-    if not os.path.isfile(p):
-        errmsg = 'cannot find substitue matrix "{}"'.format(name)
-        raise IOError(errmsg)
-    return p
+    possible_paths = [
+        os.path.join(d, 'matrix', 'bioinfo', name),
+        os.path.join(d, 'matrix', name),
+        name,
+    ]
+
+    for p in possible_paths:
+        if os.path.isfile(p):
+            return p
+    errmsg = 'cannot find substitue matrix "{}"'.format(name)
+    raise IOError(errmsg)
 
 
 def load_submat(path):
@@ -53,3 +58,5 @@ def load_submat(path):
     istring = ''.join(ichars)
     submatr = np.array(scores, dtype=int)
     return istring, jstring, submatr
+
+
