@@ -112,14 +112,14 @@ class Aligner(object):
         jpos_arr = np.empty(max(isize, jsize), dtype=self.index_dtype)
 
         # print('start backtrack')
-        # TODO: local/ overlap backtrack not from last point
+        # TODO: local / overlap backtrack not from last point
         # backtrack -- another major step
-        l = self.backtrack(
+        x = self.backtrack(
             matrx, isize, jsize, isize-1, jsize-1, ipos_arr, jpos_arr, scheme)
 
         # # debug
-        # print('sizes:', l, iarr.shape, jarr.shape)
-        return matrx, iarr[ipos_arr[:l]], jarr[jpos_arr[:l]]
+        # print('sizes:', x, iarr.shape, jarr.shape)
+        return matrx, iarr[ipos_arr[:x]], jarr[jpos_arr[:x]]
 
     @classmethod
     def build_ixarr(cls, iarr, jarr):

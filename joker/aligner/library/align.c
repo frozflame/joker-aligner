@@ -95,13 +95,10 @@ indexType backtrack(scoreType* matr, indexType isize,  indexType jsize,
     i = istart;
     j = jstart;
     x = 0;
-
-//    scoreType scores[3];
+    // scoreType scores[3];
 
     while ( (i&&j) || (scheme == GLOBAL && (i||j)) ){
-
-//        printf("back 1: %i, %i, %i, ", i, j, x);
-
+        // printf("back 1: %i, %i, %i, ", i, j, x);
         iarr[x] = i;
         jarr[x] = j;
         trace = *idx(matr, i, j, 3, isize, jsize);
@@ -111,8 +108,7 @@ indexType backtrack(scoreType* matr, indexType isize,  indexType jsize,
         else if ((trace & 3) == 1) { jarr[x] = j; iarr[x] = indel_code; j--; }
         else if ((trace & 3) == 2) { iarr[x] = i; jarr[x] = j; i--; j--; }
         else break;
-
-//        printf("back 2: %i \n", trace & 3);
+        // printf("back 2: %i \n", trace & 3);
 
         x++;
     }
