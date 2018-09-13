@@ -16,33 +16,45 @@ def locate_lib():
 
 
 class Alignment(object):
+    CI_DEFAULT = '-'
+    CM_DEFAULT = '.'
+
+    __slots__ = ['matrix', '_istr', '_jstr', 'ci', 'cm']
+
     def __init__(self, matrix, istr, jstr):
+        self.ci = self.CI_DEFAULT
+        self.cm = self.CM_DEFAULT
         self.matrix = matrix
         self._istr = istr
         self._jstr = jstr
+
+    def reconf(self, ci=CI_DEFAULT, cm=CM_DEFAULT):
+        self.ci = ci
+        self.cm = cm
+        return self
 
     @property
     def score(self):
         return self.matrix[-1, -1, 2]
 
-    def get_istring(self, cindel='-'):
-        return self._istr.replace('\0', cindel)
+    def get_istring(self):
+        return self._istr.replace('\0', self.ci)
 
-    def get_jstring(self, cindel='-'):
-        return self._jstr.replace('\0', cindel)
+    def get_jstring(self):
+        return self._jstr.replace('\0', self.ci)
 
-    def get_mstring(self, cindel='-', cmis='.'):
+    def get_mstring(self):
         iarr = np.fromstring(self._istr, dtype='uint8')
         jarr = np.fromstring(self._jstr, dtype='uint8')
 
         # set all remaining positions to cmis
         marr = np.empty(len(self._istr), dtype='uint8')
-        marr[:] = ord(cmis)
+        marr[:] = ord(self.cm)
 
         # if same char, use that char
         mask = iarr ^ jarr
         marr[mask == 0] = iarr[mask == 0]
-        marr[(iarr & jarr) == 0] = ord(cindel)
+        marr[(iarr & jarr) == 0] = ord(self.ci)
         return marr.tostring().decode()
 
     def debug(self):
