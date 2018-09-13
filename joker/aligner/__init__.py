@@ -11,13 +11,16 @@ __version__ = '0.0.3'
 # cache a few aligners
 _wref_aligners = weakref.WeakValueDictionary()
 
-
-def create_aligner(submat='blosum60', rho=13, sigma=1):
-    return Aligner.from_submat(*load_submat(submat), rho=rho, sigma=sigma)
+SCHEME = Aligner.GLOBAL
 
 
-def get_aligner(submat='blosum60', rho=13, sigma=1):
-    key = submat, rho, sigma
+def create_aligner(submat='blosum60', rho=13, sigma=1, scheme=SCHEME):
+    a = load_submat(submat)
+    return Aligner.from_submat(*a, rho=rho, sigma=sigma, scheme=scheme)
+
+
+def get_aligner(submat='blosum60', rho=13, sigma=1, scheme=SCHEME):
+    key = submat, rho, sigma, scheme
     try:
         return _wref_aligners[key]
     except KeyError:

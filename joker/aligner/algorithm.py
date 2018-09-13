@@ -107,7 +107,7 @@ class Aligner(object):
         ]
 
     @classmethod
-    def from_submat(cls, istr, jstr, submat, rho=12, sigma=1):
+    def from_submat(cls, istr, jstr, submat, rho=12, sigma=1, scheme=GLOBAL):
         reference = np.zeros(2 ** 16, dtype=submat.dtype)
         iarr = np.fromstring(istr, 'uint8')
         jarr = np.fromstring(jstr, 'uint8')
@@ -115,7 +115,7 @@ class Aligner(object):
 
         # magic indexing, Step 1: set values
         reference[ixarr] = submat
-        return cls(rho, sigma, reference)
+        return cls(rho, sigma, reference, scheme=scheme)
 
     def compute(self, istr, jstr, backtrack=False):
         """
