@@ -64,11 +64,11 @@ class Aligner(object):
     index_type = ctypes.c_int64
     score_type = ctypes.c_int64
     short_type = ctypes.c_int16
-
     score_dtype = 'int64'
     index_dtype = 'int64'
+    GLOBAL, OVERLAP, LOCAL = 1, 2, 3
 
-    def __init__(self, rho, sigma, reference, scheme=1):
+    def __init__(self, rho, sigma, reference, scheme=GLOBAL):
         """
         :param rho: gap opening penalty
         :param sigma: gap extension penalty
@@ -146,7 +146,7 @@ class Aligner(object):
         matrix[:, :, 2] = self.reference[ixarr]
 
         # overlap and local
-        if self.scheme in (2, 3):
+        if self.scheme in (self.OVERLAP, self.LOCAL):
             matrix[:, 0, :3] = 0  # j = 0, of isize x 3
             matrix[0, :, :3] = 0  # i = 0, of jsize x 3
         else:
