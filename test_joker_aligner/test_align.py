@@ -2,24 +2,11 @@
 # coding: utf-8
 from __future__ import unicode_literals, print_function
 
-import itertools
 import sys
 import time
 
 from joker.aligner import get_aligner
-
-try:
-    from joker.textmanip.iterative import chunkwize_parallel
-except ImportError:
-    def chunkwize_parallel(chunksize, *args):
-        # args are strings or lists
-        chunksize = int(chunksize)
-        for i in itertools.count(0):
-            r = [s[i * chunksize:(i + 1) * chunksize] for s in args]
-            if any(r):
-                yield r
-            else:
-                raise StopIteration
+from joker.aligner.utility import chunkwize_parallel
 
 # sp|P37744|RMLA1_ECOLI Glucose-1-phosphate thymidylyltransferase 1
 # OS=Escherichia coli (strain K12) GN=rfbA PE=1 SV=2

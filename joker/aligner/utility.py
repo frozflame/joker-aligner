@@ -3,13 +3,23 @@
 
 from __future__ import unicode_literals, print_function
 
-import os
 
-import joker.aligner
-import numpy as np
+def chunkwize_parallel(chunksize, *args):
+    import itertools
+    # args are strings or lists
+    chunksize = int(chunksize)
+    for i in itertools.count(0):
+        r = [s[i * chunksize:(i + 1) * chunksize] for s in args]
+        if any(r):
+            yield r
+        else:
+            raise StopIteration
 
 
 def locate_submat(name):
+    import os
+    import joker.aligner
+
     d = os.path.split(joker.aligner.__file__)[0]
     possible_paths = [
         os.path.join(d, 'matrix', 'bioinfo', name),
@@ -25,12 +35,14 @@ def locate_submat(name):
 
 
 def load_submat(path):
+    import numpy
+
     if '/' not in path:
         path = locate_submat(path)
 
     with open(path) as infile:
         ichars = []
-        jstring = None
+        jstr = None
         jsize = 0
         scores = []
 
@@ -38,11 +50,11 @@ def load_submat(path):
             line = line.strip()
             if line and not line.startswith('#'):
                 # remove whitespaces
-                jstring = ''.join(line.split())
-                jsize = len(jstring) + 1
+                jstr = ''.join(line.split())
+                jsize = len(jstr) + 1
                 break
 
-        if jstring is None:
+        if jstr is None:
             raise ValueError('bad substitution matrix')
 
         for line in infile:
@@ -55,8 +67,6 @@ def load_submat(path):
             ichars.append(items[0])
             scores.append([int(s) for s in items[1:]])
 
-    istring = ''.join(ichars)
-    submatr = np.array(scores, dtype=int)
-    return istring, jstring, submatr
-
-
+    istr = ''.join(ichars)
+    submat = numpy.array(scores, dtype=int)
+    return istr, jstr, submat
