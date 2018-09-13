@@ -16,7 +16,7 @@ def test_load_submat():
 
 
 def test_load_alnum1():
-    i, j, s = load_submat('EN01')
+    i, j, s = load_submat('ENSUB')
     print(i)
     print(j)
     print(s)
