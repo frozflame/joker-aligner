@@ -39,9 +39,9 @@ def demostrate(iseq, jseq):
     aligner = get_aligner()
     alignment = aligner(iseq, jseq, backtrack=True)
     match_strings = (
-        alignment.get_istring(),
-        alignment.get_mstring(),
-        alignment.get_jstring(),
+        alignment.get_istr(),
+        alignment.get_xstr(),
+        alignment.get_jstr(),
     )
     for items in chunkwize_parallel(60, *match_strings):
         bunch = '\n'.join(items)
@@ -66,5 +66,18 @@ def test_align():
     benchmark()
 
 
+def test():
+    from joker.aligner import get_aligner, create_aligner
+    s1 = 'KQAAAQTHGATVFAYQVKNPERFGVVEFNENFRAVS'
+    s2 = 'KQAAAQTHGATVFGVVEFNENFzRAVSIEEKPQRPK'
+    aligner = create_aligner('blosum60')
+    # ali = aligner(s1, s2, backtrack=False)
+    ali = aligner(s1, s2, backtrack=True)
+    print(ali.get_istr())
+    print(ali.get_xstr())
+    print(ali.get_jstr())
+
+
 if __name__ == '__main__':
     test_align()
+    # test()

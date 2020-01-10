@@ -13,7 +13,7 @@ def chunkwize_parallel(chunksize, *args):
         if any(r):
             yield r
         else:
-            raise StopIteration
+            break
 
 
 def locate_submat(name):

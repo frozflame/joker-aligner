@@ -20,7 +20,7 @@ inline scoreType max3(scoreType a, scoreType b, scoreType c) {
     return max2(a,b) < c ?  c : max2(a,b);
     }
 
-inline scoreType* idx( scoreType* matrix,
+inline scoreType* idx(scoreType* matrix,
     indexType i, indexType j, indexType k, indexType isize, indexType jsize){
         return matrix + i*jsize*KSIZE + j*KSIZE + k;
     }
@@ -104,19 +104,15 @@ indexType backtrack(scoreType* matrix, indexType isize,  indexType jsize,
             (i != 0) and (j != 0)
      */
 
+
     while ( (i&&j) || (scheme == GLOBAL && (i||j)) ){
-        // printf("backtrack pos1: %i, %i, %i, ", i, j, x);
-        iarr[x] = i;
-        jarr[x] = j;
+//         printf("backtrack pos1: %i, %i, %i, ", i, j, x);
         trace = *idx(matrix, i, j, 3, isize, jsize);
 
         /* last 2 bits */
-        if      ((trace & 3) == 0) { iarr[x] = i; jarr[x] = indel_code; i--; }
-        else if ((trace & 3) == 1) { jarr[x] = j; iarr[x] = indel_code; j--; }
-        else if ((trace & 3) == 2) { iarr[x] = i; jarr[x] = j; i--; j--; }
-        else break;
-        // printf("backtrack pos2: %i \n", trace & 3);
-
+        if      (trace == 0) { iarr[x] = i; jarr[x] = indel_code; i--; }
+        else if (trace == 1) { jarr[x] = j; iarr[x] = indel_code; j--; }
+        else if (trace == 2) { iarr[x] = i; jarr[x] = j; i--; j--; }
         x++;
     }
     return x;

@@ -37,13 +37,13 @@ class Alignment(object):
     def score(self):
         return self.matrix[-1, -1, 2]
 
-    def get_istring(self):
+    def get_istr(self):
         return self._istr.replace('\0', self.ci)
 
-    def get_jstring(self):
+    def get_jstr(self):
         return self._jstr.replace('\0', self.ci)
 
-    def get_mstring(self):
+    def get_xstr(self):
         iarr = np.fromstring(self._istr, dtype='uint8')
         jarr = np.fromstring(self._jstr, dtype='uint8')
 
@@ -58,9 +58,9 @@ class Alignment(object):
         return marr.tostring().decode()
 
     def debug(self):
-        print(self.get_istring())
-        print(self.get_mstring())
-        print(self.get_jstring())
+        print(self.get_istr())
+        print(self.get_xstr())
+        print(self.get_jstr())
 
     def debug_backtrack(self):
         symbols = ord('-'), ord('|'), ord('\\'), ord('3')
@@ -178,16 +178,16 @@ class Aligner(object):
         if not backtrack:
             return matrix, None, None
 
-        ipos_arr = np.empty(max(isize, jsize), dtype=self.index_dtype)
-        jpos_arr = np.empty(max(isize, jsize), dtype=self.index_dtype)
+        # caution: isize + jsize, not max(isize, jsize)!
+        ipos_arr = np.empty(isize + jsize, dtype=self.index_dtype)
+        jpos_arr = np.empty(isize + jsize, dtype=self.index_dtype)
 
-        # print('start backtrack')
+        print('start backtrack')
         # TODO: local / overlap backtrack not from last point
         # backtrack -- another major step
         x = self.backtrack(
             matrix, isize, jsize, isize - 1, jsize - 1, ipos_arr, jpos_arr, self.scheme)
 
-        # # debug
         # print('sizes:', x, iarr.shape, jarr.shape)
         return matrix, iarr[ipos_arr[:x]], jarr[jpos_arr[:x]]
 
@@ -199,7 +199,6 @@ class Aligner(object):
         :param jarr: a 1d array representing a string
         :return: a 2d array
         """
-
         iarr = iarr.astype('uint16') << 8
         jarr = jarr.astype('uint16')
         iarr[0] = 0
@@ -208,7 +207,7 @@ class Aligner(object):
         jarr.shape = 1, -1
         return iarr | jarr
 
-    def __call__(self, istr, jstr, backtrack=True):
+    def __call__(self, istr, jstr, backtrack=False):
         """
         :param istr: (str)
         :param jstr: (str)
