@@ -3,8 +3,8 @@
 
 import weakref
 
-from joker.aligner.algorithm import Aligner
-from joker.aligner.utility import load_submat
+from joker.aligner.algor import Aligner
+from joker.aligner.utils import load_submat
 
 __version__ = '0.0.3'
 

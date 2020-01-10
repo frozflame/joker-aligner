@@ -6,7 +6,7 @@ import sys
 import time
 
 from joker.aligner import get_aligner
-from joker.aligner.utility import chunkwize_parallel
+from joker.aligner.utils import chunkwize_parallel
 
 # sp|P37744|RMLA1_ECOLI Glucose-1-phosphate thymidylyltransferase 1
 # OS=Escherichia coli (strain K12) GN=rfbA PE=1 SV=2

@@ -5,7 +5,7 @@ from __future__ import division, print_function
 
 # from joker.aligner import visualize
 # from joker.aligner.compute import Aligner
-from joker.aligner.utility import load_submat
+from joker.aligner.utils import load_submat
 
 
 def test_load_submat():
